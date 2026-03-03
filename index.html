@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operación B2 - Modo Experto</title>
+    <title>Operación B2 - God Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,199 +15,105 @@
             --text: #1e293b;
             --text-light: #64748b;
         }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-        /* Cabecera Premium */
-        header {
-            background: linear-gradient(135deg, #1e293b, var(--primary));
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
+        /* Cabecera */
+        header { background: linear-gradient(135deg, #0f172a, var(--primary)); color: white; padding: 2rem 1rem; text-align: center; }
         h1 { margin: 0; font-size: 2.5rem; letter-spacing: -1px; }
-        .countdown {
-            background: rgba(255,255,255,0.2);
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 20px;
-            margin-top: 10px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            backdrop-filter: blur(5px);
-        }
-        /* Navegación moderna */
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: white;
-            padding: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        nav button {
-            background: none;
-            border: none;
-            color: var(--text-light);
-            padding: 10px 20px;
-            margin: 0 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
+        .badges-container { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+        .badge { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-weight: 600; backdrop-filter: blur(5px); font-size: 0.95rem; }
+        
+        /* Navegación */
+        nav { display: flex; justify-content: center; background-color: white; padding: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; }
+        nav button { background: none; border: none; color: var(--text-light); padding: 10px 20px; margin: 0 5px; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 8px; transition: all 0.2s; }
         nav button:hover { background-color: var(--bg); color: var(--primary); }
-        nav button.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        /* Contenedor y Tarjetas */
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+        nav button.active { background-color: var(--primary); color: white; }
+        
+        /* Contenedor */
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
+        .card { background: var(--card-bg); padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 2rem; }
         h2 { color: var(--primary); margin-top: 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
         
-        /* Pomodoro Widget */
-        .pomodoro-widget {
-            background: #fffbeb;
-            border: 2px dashed var(--accent);
-            padding: 15px;
-            text-align: center;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
+        /* Widgets: Pomodoro & Temas */
+        .widgets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .widget-box { background: #fffbeb; border: 2px dashed var(--accent); padding: 20px; text-align: center; border-radius: 12px; }
         #timer-display { font-size: 2.5rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
+        #tema-display { font-size: 1.1rem; font-weight: 600; color: #334155; margin: 15px 0; min-height: 50px; display: flex; align-items: center; justify-content: center; background: white; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
         
-        /* Formularios y Listas */
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-        input, select {
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            flex: 1;
-            min-width: 150px;
-            font-family: 'Inter', sans-serif;
-        }
-        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
-        button.action-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
+        /* Formularios y Botones */
+        .input-group { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        input, select { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; flex: 1; min-width: 150px; font-family: inherit; }
+        button.action-btn { background-color: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
         button.action-btn:hover { background-color: var(--primary-hover); }
         
+        /* Listas y Flashcards */
         ul.dynamic-list { list-style: none; padding: 0; }
-        ul.dynamic-list li {
-            background: white;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #e2e8f0;
-            border-left: 5px solid var(--primary);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        button.delete-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button.delete-btn:hover { background: #dc2626; }
-
-        /* Efecto Flashcard */
-        .flashcard-mode .es-translation {
-            filter: blur(5px);
-            transition: filter 0.3s;
-            cursor: pointer;
-            background: #e2e8f0;
-            border-radius: 4px;
-        }
-        .flashcard-mode .es-translation:hover { filter: blur(0); background: transparent; }
+        ul.dynamic-list li { background: white; margin-bottom: 10px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); transition: transform 0.2s; }
+        ul.dynamic-list li:hover { transform: translateX(5px); }
+        .item-content { flex: 1; display: flex; align-items: center; gap: 15px; }
         
+        .btn-speak { background: #e0f2fe; color: #0284c7; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .btn-speak:hover { background: #bae6fd; transform: scale(1.1); }
+        button.delete-btn { background: #ef4444; color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        
+        .flashcard-mode .es-translation { filter: blur(6px); transition: filter 0.3s; cursor: help; background: #e2e8f0; border-radius: 4px; padding: 0 5px; }
+        .flashcard-mode .es-translation:hover { filter: blur(0); background: transparent; }
     </style>
 </head>
 <body onload="initApp()">
 
     <header>
-        <h1>🚀 Operación B2 Mayo</h1>
-        <div class="countdown" id="countdown-timer">Calculando días...</div>
+        <h1>🚀 Operación B2</h1>
+        <div class="badges-container">
+            <div class="badge" id="countdown-timer">⏳ Calculando...</div>
+            <div class="badge">🔥 Objetivo: Goethe-Zertifikat</div>
+        </div>
     </header>
 
     <nav>
-        <button class="tab-link active" onclick="openTab(event, 'plan')">📅 Rutina</button>
-        <button class="tab-link" onclick="openTab(event, 'redemittel')">🧱 Frases</button>
+        <button class="tab-link active" onclick="openTab(event, 'plan')">🎯 Entrenamiento</button>
+        <button class="tab-link" onclick="openTab(event, 'redemittel')">🧱 Mi Diccionario</button>
         <button class="tab-link" onclick="openTab(event, 'material')">🎧 Inmersión</button>
-        <button class="tab-link" onclick="openTab(event, 'progreso')">📈 Progreso</button>
+        <button class="tab-link" onclick="openTab(event, 'progreso')">📈 Métricas</button>
     </nav>
 
     <div class="container">
-        
         <div id="plan" class="tab-content active card">
-            <h2>⏱️ Simulacro Activo</h2>
-            <div class="pomodoro-widget">
-                <p style="margin:0; font-weight: 600;">Temporizador para Schreiben o Lesen</p>
-                <div id="timer-display">25:00</div>
-                <button class="action-btn" onclick="startTimer()" style="background: var(--accent);">▶️ Iniciar 25 min</button>
-                <button class="action-btn" onclick="resetTimer()" style="background: #64748b;">⏹️ Reiniciar</button>
+            <div class="widgets-grid">
+                <div class="widget-box">
+                    <h3 style="margin:0; color: var(--accent);">⏱️ Cronómetro (25m)</h3>
+                    <div id="timer-display">25:00</div>
+                    <button class="action-btn" onclick="startTimer()" style="background: var(--accent); padding: 8px 15px;">▶️ Start</button>
+                    <button class="action-btn" onclick="resetTimer()" style="background: #64748b; padding: 8px 15px;">⏹️ Reset</button>
+                </div>
+                <div class="widget-box" style="border-color: var(--primary); background: #eff6ff;">
+                    <h3 style="margin:0; color: var(--primary);">🎲 Ruleta de Examen</h3>
+                    <div id="tema-display">Haz clic para generar un tema real de B2</div>
+                    <button class="action-btn" onclick="generarTema()">🔄 Generar Tema</button>
+                </div>
             </div>
 
             <h2>📅 Plan Directo al Grano</h2>
-            <p><strong>Lunes (Lesen):</strong> Escanear artículo + 3 Frases.<br>
-            <strong>Martes (Hören):</strong> Podcast + 10 min Shadowing.<br>
-            <strong>Miércoles (Schreiben):</strong> Redacción (usa el temporizador).<br>
-            <strong>Jueves (Sprechen):</strong> Grabar presentación de 4 min.<br>
-            <strong>Viernes (Gramática):</strong> Estructuras caza-puntos.<br>
-            <strong>Sábado:</strong> Módulo real Goethe.<br>
-            <strong>Domingo:</strong> Descanso e inmersión pasiva.</p>
+            <p><strong>Lunes:</strong> Escanear artículo + Añadir 3 Frases nuevas.<br>
+            <strong>Martes:</strong> Podcast + Escuchar tus frases con el botón 🔊.<br>
+            <strong>Miércoles:</strong> Escribir (Usa el generador de temas y el reloj).<br>
+            <strong>Jueves:</strong> Hablar 4 min en voz alta sobre un tema generado.<br>
+            <strong>Viernes:</strong> Gramática.<br>
+            <strong>Fin de semana:</strong> Módulo real Goethe.</p>
         </div>
 
         <div id="redemittel" class="tab-content card">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; margin-bottom: 15px; padding-bottom: 10px;">
                 <h2 style="border: none; margin: 0; padding: 0;">🧱 Mis Redemittel</h2>
-                <button class="action-btn" onclick="toggleFlashcards()" style="background: #10b981; padding: 8px 15px;">🙈 Modo Flashcard</button>
+                <button class="action-btn" onclick="toggleFlashcards()" style="background: #10b981;">🙈 Activar Flashcards</button>
             </div>
             
             <div class="input-group">
-                <input type="text" id="frase-de" placeholder="🇩🇪 Frase en alemán">
-                <input type="text" id="frase-es" placeholder="🇪🇸 Significado">
+                <input type="text" id="frase-de" placeholder="🇩🇪 Escribe en alemán (Ej: Ich stehe auf dem Standpunkt...)">
+                <input type="text" id="frase-es" placeholder="🇪🇸 Traducción">
                 <button class="action-btn" onclick="addItem('frases')">Guardar</button>
             </div>
             <ul id="lista-frases" class="dynamic-list"></ul>
@@ -243,7 +149,7 @@
                 <button class="action-btn" onclick="addItem('notas')">Registrar</button>
             </div>
             <ul id="lista-notas" class="dynamic-list"></ul>
-
+            
             <h2 style="margin-top: 2rem;">🧩 Gramática Dominada</h2>
             <div class="input-group">
                 <input type="text" id="gramatica-tema" placeholder="Estructura (Ej: Pasiva)...">
@@ -251,12 +157,10 @@
             </div>
             <ul id="lista-gramatica" class="dynamic-list"></ul>
         </div>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // --- NAVEGACIÓN ---
         function openTab(evt, tabName) {
             let i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
@@ -267,57 +171,66 @@
             evt.currentTarget.classList.add("active");
         }
 
-        // --- CUENTA ATRÁS ---
+        // --- RELOJ Y TEMPORIZADOR ---
         function updateCountdown() {
             const examDate = new Date('2026-05-20T00:00:00').getTime();
             const now = new Date().getTime();
             const distance = examDate - now;
-            
-            if (distance < 0) {
-                document.getElementById("countdown-timer").innerHTML = "¡DÍA DEL EXAMEN! Viel Erfolg!";
-                return;
-            }
+            if (distance < 0) { document.getElementById("countdown-timer").innerHTML = "¡EXAMEN! Viel Erfolg!"; return; }
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            document.getElementById("countdown-timer").innerHTML = `⏳ Faltan ${days} días para el examen`;
+            document.getElementById("countdown-timer").innerHTML = `⏳ Faltan ${days} días`;
         }
         setInterval(updateCountdown, 1000);
 
-        // --- POMODORO TIMER ---
-        let timerInterval;
-        let timeLeft = 1500; // 25 minutos
-        
+        let timerInterval; let timeLeft = 1500;
         function updateTimerDisplay() {
-            let m = Math.floor(timeLeft / 60);
-            let s = timeLeft % 60;
+            let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
             document.getElementById("timer-display").innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
         }
         function startTimer() {
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if(timeLeft > 0) { timeLeft--; updateTimerDisplay(); } 
-                else { clearInterval(timerInterval); alert("¡Tiempo terminado! Buen trabajo."); }
+                else { clearInterval(timerInterval); alert("¡Tiempo de examen completado!"); }
             }, 1000);
         }
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timeLeft = 1500;
-            updateTimerDisplay();
+        function resetTimer() { clearInterval(timerInterval); timeLeft = 1500; updateTimerDisplay(); }
+
+        // --- GENERADOR DE TEMAS B2 ---
+        const temasB2 = [
+            "¿Deberían prohibirse los coches en el centro de las ciudades? (Autofreie Innenstädte)",
+            "Compras online vs. Tiendas físicas (Einkaufen im Internet)",
+            "Ventajas y desventajas del teletrabajo (Homeoffice)",
+            "¿Deberían los niños tener teléfonos móviles? (Smartphones für Kinder)",
+            "El consumo de carne y la protección del medio ambiente (Umweltschutz & Ernährung)",
+            "Aprender idiomas extranjeros en la guardería (Fremdsprachen im Kindergarten)",
+            "Comida rápida frente a cocinar en casa (Fast Food vs. Kochen zu Hause)",
+            "Turismo masivo: ¿Maldición o bendición? (Massentourismus)",
+            "El dinero en efectivo frente al pago digital (Bargeldloses Bezahlen)"
+        ];
+        function generarTema() {
+            let random = temasB2[Math.floor(Math.random() * temasB2.length)];
+            document.getElementById("tema-display").innerText = "📝 " + random;
         }
 
-        // --- MODO FLASHCARD ---
-        function toggleFlashcards() {
-            document.getElementById('lista-frases').classList.toggle('flashcard-mode');
+        // --- FLASHCARDS Y LECTOR NATIVO (TTS) ---
+        function toggleFlashcards() { document.getElementById('lista-frases').classList.toggle('flashcard-mode'); }
+        
+        function leerEnAleman(texto) {
+            // Cancelar audio previo si lo hubiera
+            window.speechSynthesis.cancel();
+            let mensaje = new SpeechSynthesisUtterance(texto);
+            mensaje.lang = 'de-DE'; // Fuerza el acento alemán
+            mensaje.rate = 0.9; // Velocidad ligeramente más lenta para entender bien
+            window.speechSynthesis.speak(mensaje);
         }
 
-        // --- BASE DE DATOS (SUPABASE) ---
+        // --- BASE DE DATOS SUPABASE ---
         const supabaseUrl = 'https://wczkybpieqdwnuvgosfq.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indjemt5YnBpZXFkd251dmdvc2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NjA1NjksImV4cCI6MjA4ODEzNjU2OX0.4A-ilrku2_HyyS32sjP3djNxk3wmv-ymUx0ULZpvz-4';
         const db = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function initApp() {
-            updateCountdown();
-            renderAll();
-        }
+        async function initApp() { updateCountdown(); renderAll(); }
 
         async function addItem(categoria) {
             let texto = "";
@@ -325,54 +238,60 @@
                 let de = document.getElementById('frase-de').value;
                 let es = document.getElementById('frase-es').value;
                 if(!de) return;
-                // Estructura separada para poder difuminar el español
-                texto = `<strong style="font-size:1.1rem; color:var(--primary);">${de}</strong> <br> <span class="es-translation"><em>${es}</em></span>`;
-                document.getElementById('frase-de').value = '';
-                document.getElementById('frase-es').value = '';
+                texto = `<strong class="de-text" style="font-size:1.1rem; color:var(--primary);">${de}</strong> <br> <span class="es-translation"><em>${es}</em></span>`;
+                document.getElementById('frase-de').value = ''; document.getElementById('frase-es').value = '';
             } else if (categoria === 'podcasts') {
-                texto = document.getElementById('podcast-nombre').value;
-                document.getElementById('podcast-nombre').value = '';
+                texto = document.getElementById('podcast-nombre').value; document.getElementById('podcast-nombre').value = '';
             } else if (categoria === 'articulos') {
-                texto = document.getElementById('articulo-nombre').value;
-                document.getElementById('articulo-nombre').value = '';
+                texto = document.getElementById('articulo-nombre').value; document.getElementById('articulo-nombre').value = '';
             } else if (categoria === 'notas') {
-                let mod = document.getElementById('nota-modulo').value;
-                let punt = document.getElementById('nota-puntuacion').value;
-                let fec = document.getElementById('nota-fecha').value;
+                let mod = document.getElementById('nota-modulo').value; let punt = document.getElementById('nota-puntuacion').value; let fec = document.getElementById('nota-fecha').value;
                 if(!punt) return;
                 texto = `<strong>${mod}</strong>: <span style="color:var(--accent); font-weight:bold;">${punt}</span> (${fec})`;
                 document.getElementById('nota-puntuacion').value = '';
             } else if (categoria === 'gramatica') {
-                texto = document.getElementById('gramatica-tema').value;
-                document.getElementById('gramatica-tema').value = '';
+                texto = document.getElementById('gramatica-tema').value; document.getElementById('gramatica-tema').value = '';
             }
 
             if(!texto) return;
-
             const { data, error } = await db.from('b2_tracker').insert([{ categoria: categoria, contenido: texto }]);
-            if (error) console.error("Error guardando:", error);
-            else renderAll(); 
+            if (error) console.error("Error:", error); else renderAll(); 
         }
 
         async function deleteItem(id) {
             const { error } = await db.from('b2_tracker').delete().eq('id', id);
-            if (error) console.error("Error borrando:", error);
-            else renderAll();
+            if (error) console.error("Error:", error); else renderAll();
         }
 
         async function renderAll() {
             const { data, error } = await db.from('b2_tracker').select('*').order('created_at', { ascending: true });
-            if (error) { console.error("Error leyendo:", error); return; }
+            if (error) return;
 
-            document.getElementById('lista-frases').innerHTML = '';
-            document.getElementById('lista-podcasts').innerHTML = '';
-            document.getElementById('lista-articulos').innerHTML = '';
-            document.getElementById('lista-notas').innerHTML = '';
+            document.getElementById('lista-frases').innerHTML = ''; document.getElementById('lista-podcasts').innerHTML = '';
+            document.getElementById('lista-articulos').innerHTML = ''; document.getElementById('lista-notas').innerHTML = '';
             document.getElementById('lista-gramatica').innerHTML = '';
 
             data.forEach(item => {
                 let li = document.createElement('li');
-                li.innerHTML = `<div style="flex:1;">${item.contenido}</div> <button class="delete-btn" onclick="deleteItem(${item.id})">X</button>`;
+                
+                // Si es una frase, le añadimos el botón de audio
+                if (item.categoria === 'frases') {
+                    // Extraer solo el texto en alemán limpio para que el lector no lea código HTML
+                    let tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = item.contenido;
+                    let textoAleman = tempDiv.querySelector('.de-text') ? tempDiv.querySelector('.de-text').innerText : "Fehler";
+                    
+                    li.innerHTML = `
+                        <div class="item-content">
+                            <button class="btn-speak" onclick="leerEnAleman('${textoAleman.replace(/'/g, "\\'")}')" title="Escuchar pronunciación">🔊</button>
+                            <div style="flex:1;">${item.contenido}</div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteItem(${item.id})">X</button>
+                    `;
+                } else {
+                    li.innerHTML = `<div style="flex:1;">${item.contenido}</div> <button class="delete-btn" onclick="deleteItem(${item.id})">X</button>`;
+                }
+                
                 document.getElementById(`lista-${item.categoria}`).appendChild(li);
             });
         }
