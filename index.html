@@ -1,0 +1,88 @@
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Cambiar pestañas
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) { tabcontent[i].classList.remove("active"); }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // --- CONEXIÓN A BASE DE DATOS ---
+        // ¡Pega aquí tus claves de Supabase!
+        const supabaseUrl = 'https://supabase.com/dashboard/project/wczkybpieqdwnuvgosfq';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indjemt5YnBpZXFkd251dmdvc2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NjA1NjksImV4cCI6MjA4ODEzNjU2OX0.4A-ilrku2_HyyS32sjP3djNxk3wmv-ymUx0ULZpvz-4';
+        const db = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Iniciar la app y descargar datos
+        async function initApp() {
+            renderAll();
+        }
+
+        // Añadir elemento a la nube
+        async function addItem(categoria) {
+            let texto = "";
+            if (categoria === 'frases') {
+                let de = document.getElementById('frase-de').value;
+                let es = document.getElementById('frase-es').value;
+                if(!de) return;
+                texto = `<strong>${de}</strong> - <em>${es}</em>`;
+                document.getElementById('frase-de').value = '';
+                document.getElementById('frase-es').value = '';
+            } else if (categoria === 'podcasts') {
+                texto = document.getElementById('podcast-nombre').value;
+                document.getElementById('podcast-nombre').value = '';
+            } else if (categoria === 'articulos') {
+                texto = document.getElementById('articulo-nombre').value;
+                document.getElementById('articulo-nombre').value = '';
+            } else if (categoria === 'notas') {
+                let mod = document.getElementById('nota-modulo').value;
+                let punt = document.getElementById('nota-puntuacion').value;
+                let fec = document.getElementById('nota-fecha').value;
+                if(!punt) return;
+                texto = `<strong>${mod}</strong>: ${punt} (${fec})`;
+                document.getElementById('nota-puntuacion').value = '';
+            } else if (categoria === 'gramatica') {
+                texto = document.getElementById('gramatica-tema').value;
+                document.getElementById('gramatica-tema').value = '';
+            }
+
+            if(!texto) return;
+
+            // Enviar a Supabase
+            const { data, error } = await db.from('b2_tracker').insert([{ categoria: categoria, contenido: texto }]);
+            if (error) console.error("Error guardando:", error);
+            else renderAll(); // Recargar la lista
+        }
+
+        // Borrar elemento de la nube
+        async function deleteItem(id) {
+            const { error } = await db.from('b2_tracker').delete().eq('id', id);
+            if (error) console.error("Error borrando:", error);
+            else renderAll();
+        }
+
+        // Leer todo de la base de datos y mostrarlo
+        async function renderAll() {
+            const { data, error } = await db.from('b2_tracker').select('*').order('created_at', { ascending: true });
+            if (error) { console.error("Error leyendo:", error); return; }
+
+            // Limpiar listas actuales
+            document.getElementById('lista-frases').innerHTML = '';
+            document.getElementById('lista-podcasts').innerHTML = '';
+            document.getElementById('lista-articulos').innerHTML = '';
+            document.getElementById('lista-notas').innerHTML = '';
+            document.getElementById('lista-gramatica').innerHTML = '';
+
+            // Repartir los datos en sus pestañas
+            data.forEach(item => {
+                let li = document.createElement('li');
+                li.innerHTML = `<span>${item.contenido}</span> <button class="delete-btn" onclick="deleteItem(${item.id})">X</button>`;
+                document.getElementById(`lista-${item.categoria}`).appendChild(li);
+            });
+        }
+    </script>
