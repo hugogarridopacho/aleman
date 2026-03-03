@@ -1,4 +1,268 @@
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operación B2 Mayo - Mi Tracker</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #ff9800;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            flex-wrap: wrap;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        nav button:hover, nav button.active {
+            background-color: #555;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        input, select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 150px;
+        }
+        button.add-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button.add-btn:hover { background-color: #e68a00; }
+        ul.dynamic-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul.dynamic-list li {
+            background: #e9ecef;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid var(--primary-color);
+        }
+        button.delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        button.delete-btn:hover { background: #c82333; }
+    </style>
+</head>
+<body onload="initApp()">
+
+    <header>
+        <h1>🚀 Operación B2 Mayo - Mi Tracker</h1>
+        <p>Tu centro de mando para aprobar el Goethe-Zertifikat</p>
+    </header>
+
+    <nav>
+        <button class="tab-link active" onclick="openTab(event, 'plan')">📅 Plan y Estrategia</button>
+        <button class="tab-link" onclick="openTab(event, 'redemittel')">🧱 Mis Frases</button>
+        <button class="tab-link" onclick="openTab(event, 'material')">🎧 Audios y Textos</button>
+        <button class="tab-link" onclick="openTab(event, 'progreso')">📈 Notas y Gramática</button>
+    </nav>
+
+    <div class="container">
+        <div id="plan" class="tab-content active">
+            <h2>📅 Tu Rutina Diaria (30-45 min)</h2>
+            <p><strong>Lunes (Lesen):</strong> Leer artículo (técnica escaneo) + Añadir frases.<br>
+            <strong>Martes (Hören):</strong> Podcast + 10 min de Shadowing (repetir en voz alta).<br>
+            <strong>Miércoles (Schreiben):</strong> Simulacro de redacción con cronómetro (25 min).<br>
+            <strong>Jueves (Sprechen):</strong> Grabarte 4 min hablando sobre un tema.<br>
+            <strong>Viernes (Gramática):</strong> Repasar un tema fuerte (ej. Pasiva, Konjunktiv II).<br>
+            <strong>Sábado (Examen):</strong> Hacer un módulo real cronometrado.<br>
+            <strong>Domingo:</strong> Descanso e inmersión pasiva (música/radio en alemán).</p>
+        </div>
+
+        <div id="redemittel" class="tab-content">
+            <h2>🧱 Mi Banco de Redemittel</h2>
+            <div class="input-group">
+                <input type="text" id="frase-de" placeholder="Frase en alemán">
+                <input type="text" id="frase-es" placeholder="Significado">
+                <button class="add-btn" onclick="addItem('frases')">Añadir</button>
+            </div>
+            <ul id="lista-frases" class="dynamic-list"></ul>
+        </div>
+
+        <div id="material" class="tab-content">
+            <h2>🎧 Podcasts Escuchados</h2>
+            <div class="input-group">
+                <input type="text" id="podcast-nombre" placeholder="Nombre del episodio o podcast">
+                <button class="add-btn" onclick="addItem('podcasts')">Añadir</button>
+            </div>
+            <ul id="lista-podcasts" class="dynamic-list"></ul>
+
+            <h2>📖 Artículos Trabajados</h2>
+            <div class="input-group">
+                <input type="text" id="articulo-nombre" placeholder="Título del artículo">
+                <button class="add-btn" onclick="addItem('articulos')">Añadir</button>
+            </div>
+            <ul id="lista-articulos" class="dynamic-list"></ul>
+        </div>
+
+        <div id="progreso" class="tab-content">
+            <h2>📈 Mis Notas de Simulacros</h2>
+            <div class="input-group">
+                <select id="nota-modulo">
+                    <option value="Lesen">Lesen</option>
+                    <option value="Hören">Hören</option>
+                    <option value="Schreiben">Schreiben</option>
+                    <option value="Sprechen">Sprechen</option>
+                    <option value="Examen Completo">Examen Completo</option>
+                </select>
+                <input type="text" id="nota-puntuacion" placeholder="Puntuación (Ej: 22/30)">
+                <input type="date" id="nota-fecha">
+                <button class="add-btn" onclick="addItem('notas')">Añadir</button>
+            </div>
+            <ul id="lista-notas" class="dynamic-list"></ul>
+
+            <h2>🧩 Gramática Dominada</h2>
+            <div class="input-group">
+                <input type="text" id="gramatica-tema" placeholder="Tema (Ej: Konjunktiv II)">
+                <button class="add-btn" onclick="addItem('gramatica')">Añadir</button>
+            </div>
+            <ul id="lista-gramatica" class="dynamic-list"></ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) { tabcontent[i].classList.remove("active"); }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        const supabaseUrl = 'https://wczkybpieqdwnuvgosfq.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indjemt5YnBpZXFkd251dmdvc2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NjA1NjksImV4cCI6MjA4ODEzNjU2OX0.4A-ilrku2_HyyS32sjP3djNxk3wmv-ymUx0ULZpvz-4';
+        const db = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function initApp() {
+            renderAll();
+        }
+
+        async function addItem(categoria) {
+            let texto = "";
+            if (categoria === 'frases') {
+                let de = document.getElementById('frase-de').value;
+                let es = document.getElementById('frase-es').value;
+                if(!de) return;
+                texto = `<strong>${de}</strong> - <em>${es}</em>`;
+                document.getElementById('frase-de').value = '';
+                document.getElementById('frase-es').value = '';
+            } else if (categoria === 'podcasts') {
+                texto = document.getElementById('podcast-nombre').value;
+                document.getElementById('podcast-nombre').value = '';
+            } else if (categoria === 'articulos') {
+                texto = document.getElementById('articulo-nombre').value;
+                document.getElementById('articulo-nombre').value = '';
+            } else if (categoria === 'notas') {
+                let mod = document.getElementById('nota-modulo').value;
+                let punt = document.getElementById('nota-puntuacion').value;
+                let fec = document.getElementById('nota-fecha').value;
+                if(!punt) return;
+                texto = `<strong>${mod}</strong>: ${punt} (${fec})`;
+                document.getElementById('nota-puntuacion').value = '';
+            } else if (categoria === 'gramatica') {
+                texto = document.getElementById('gramatica-tema').value;
+                document.getElementById('gramatica-tema').value = '';
+            }
+
+            if(!texto) return;
+
+            const { data, error } = await db.from('b2_tracker').insert([{ categoria: categoria, contenido: texto }]);
+            if (error) console.error("Error guardando:", error);
+            else renderAll(); 
+        }
+
+        async function deleteItem(id) {
+            const { error } = await db.from('b2_tracker').delete().eq('id', id);
+            if (error) console.error("Error borrando:", error);
+            else renderAll();
+        }
+
+        async function renderAll() {
+            const { data, error } = await db.from('b2_tracker').select('*').order('created_at', { ascending: true });
+            if (error) { console.error("Error leyendo:", error); return; }
+
+            document.getElementById('lista-frases').innerHTML = '';
+            document.getElementById('lista-podcasts').innerHTML = '';
+            document.getElementById('lista-articulos').innerHTML = '';
+            document.getElementById('lista-notas').innerHTML = '';
+            document.getElementById('lista-gramatica').innerHTML = '';
+
+            data.forEach(item => {
+                let li = document.createElement('li');
+                li.innerHTML = `<span>${item.contenido}</span> <button class="delete-btn" onclick="deleteItem(${item.id})">X</button>`;
+                document.getElementById(`lista-${item.categoria}`).appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
         // Cambiar pestañas
