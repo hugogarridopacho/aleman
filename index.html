@@ -17,6 +17,394 @@
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
         
+        header { background: linear-gradient(135deg, #0f172a, var(--primary)); color: white; padding: 2rem 1rem; text-align: center; }
+        h1 { margin: 0; font-size: 2.5rem; letter-spacing: -1px; }
+        .badges-container { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+        .badge { background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-weight: 600; backdrop-filter: blur(5px); font-size: 0.95rem; }
+        
+        nav { display: flex; justify-content: center; background-color: white; padding: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; flex-wrap: wrap; }
+        nav button { background: none; border: none; color: var(--text-light); padding: 10px 20px; margin: 0 5px; cursor: pointer; font-size: 1rem; font-weight: 600; border-radius: 8px; transition: all 0.2s; }
+        nav button:hover { background-color: var(--bg); color: var(--primary); }
+        nav button.active { background-color: var(--primary); color: white; }
+        
+        .container { max-width: 950px; margin: 2rem auto; padding: 0 1rem; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card-bg); padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        h2 { color: var(--primary); margin-top: 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        
+        /* Plan Semanal Tabla */
+        .plan-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.95rem; }
+        .plan-table th, .plan-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; vertical-align: top; }
+        .plan-table th { background-color: #f1f5f9; color: var(--primary); font-weight: 800; }
+        .plan-table tr:nth-child(even) { background-color: #f8fafc; }
+        .plan-table td strong { color: #334155; }
+        
+        /* Traductor Widget */
+        .translator-box { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .translator-box textarea { width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: inherit; margin-bottom: 10px; box-sizing: border-box; resize: vertical; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .result-box { margin-top: 15px; padding: 15px; background: white; border-radius: 8px; border-left: 4px solid var(--accent); min-height: 20px; }
+        
+        /* Formularios y Botones */
+        .input-group { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        input, select { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; flex: 1; min-width: 150px; font-family: inherit; }
+        button.action-btn { background-color: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        button.action-btn:hover { background-color: var(--primary-hover); }
+        
+        /* Listas y Flashcards */
+        ul.dynamic-list { list-style: none; padding: 0; }
+        ul.dynamic-list li { background: white; margin-bottom: 10px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); transition: transform 0.2s; }
+        ul.dynamic-list li:hover { transform: translateX(5px); }
+        .item-content { flex: 1; display: flex; align-items: center; gap: 15px; }
+        
+        .btn-speak { background: #e0f2fe; color: #0284c7; border: none; border-radius: 50%; min-width: 40px; height: 40px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .btn-speak:hover { background: #bae6fd; transform: scale(1.1); }
+        button.delete-btn { background: #ef4444; color: white; border: none; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-weight: bold; margin-left: 10px; }
+        
+        .flashcard-mode .es-translation { filter: blur(6px); transition: filter 0.3s; cursor: help; background: #e2e8f0; border-radius: 4px; padding: 0 5px; }
+        .flashcard-mode .es-translation:hover { filter: blur(0); background: transparent; }
+    </style>
+</head>
+<body onload="initApp()">
+
+    <header>
+        <h1>🚀 Operación B2</h1>
+        <div class="badges-container">
+            <div class="badge" id="countdown-timer">⏳ Calculando...</div>
+            <div class="badge">🎯 Examen Goethe: 20 de Mayo</div>
+        </div>
+    </header>
+
+    <nav>
+        <button class="tab-link active" onclick="openTab(event, 'plan')">📅 Plan Detallado</button>
+        <button class="tab-link" onclick="openTab(event, 'traductor')">🌐 Traductor & Corrector</button>
+        <button class="tab-link" onclick="openTab(event, 'redemittel')">🧱 Mi Diccionario</button>
+        <button class="tab-link" onclick="openTab(event, 'material')">🎧 Inmersión</button>
+        <button class="tab-link" onclick="openTab(event, 'progreso')">📈 Progreso</button>
+    </nav>
+
+    <div class="container">
+        <div id="plan" class="tab-content active card">
+            <h2>📅 Tu Estrategia Semanal Goethe B2</h2>
+            <table class="plan-table">
+                <tr>
+                    <th>Día</th>
+                    <th>Módulo Objetivo</th>
+                    <th>Tareas Específicas y Metodología</th>
+                </tr>
+                <tr>
+                    <td><strong>Lunes</strong></td>
+                    <td>📖 Lesen (30 min)</td>
+                    <td>Leer un texto B2 (ej. DW Top-Thema). <br><strong>Técnica:</strong> Lee las preguntas primero, luego escanea el texto buscando <em>sinónimos</em>. Apunta 3 Redemittel nuevos en la pestaña "Mi Diccionario".</td>
+                </tr>
+                <tr>
+                    <td><strong>Martes</strong></td>
+                    <td>🎧 Hören (30 min)</td>
+                    <td>Escuchar un podcast (Auf Deutsch gesagt / Easy German). <br><strong>Técnica:</strong> Escucha 2 minutos seguidos, pausa y haz <em>Shadowing</em> (repite en voz alta imitando la entonación). Presta atención a conectores dobles.</td>
+                </tr>
+                <tr>
+                    <td><strong>Miércoles</strong></td>
+                    <td>✍️ Schreiben (45 min)</td>
+                    <td>Hacer un simulacro de redacción (Teil 1 o 2). <br><strong>Obligatorio:</strong> Pon un cronómetro de 25 minutos exactos (no más). Incluye una frase pasiva, un Konjunktiv II y 3 Redemittel de tu lista. Pásalo por el Corrector de la web.</td>
+                </tr>
+                <tr>
+                    <td><strong>Jueves</strong></td>
+                    <td>🗣️ Sprechen (30 min)</td>
+                    <td>Prepara un esquema con "Ventajas/Desventajas". <br><strong>Técnica:</strong> Grábate con el móvil hablando durante 4 minutos sin parar. Escucha el audio para detectar muletillas (los "ehh...") y bórralas.</td>
+                </tr>
+                <tr>
+                    <td><strong>Viernes</strong></td>
+                    <td>🧩 Gramática (30 min)</td>
+                    <td>Día de "cazar puntos". Estudia construcciones complejas (Nomen-Verb-Verbindungen, Oraciones de Relativo, Plusquamperfekt). Añade la estructura aprendida a tu pestaña "Progreso".</td>
+                </tr>
+                <tr>
+                    <td><strong>Sábado</strong></td>
+                    <td>⏱️ Simulacro (60 min)</td>
+                    <td>Imprime un módulo real del Goethe Institut. Hazlo con condiciones de examen: móvil apagado, sin diccionario, respetando el reloj. Registra tu nota en la web.</td>
+                </tr>
+                <tr>
+                    <td><strong>Domingo</strong></td>
+                    <td>🌴 Repaso Activo</td>
+                    <td>Abre "Mi Diccionario" en modo Flashcard y evalúate. Inmersión pasiva: ponte música o series en alemán sin agobios.</td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="traductor" class="tab-content card">
+            <h2>🌐 Herramientas de Idioma Pro</h2>
+            <div class="translator-box">
+                <textarea id="traductor-input" placeholder="Escribe aquí tu frase en alemán o en español..."></textarea>
+                <div class="btn-group">
+                    <button class="action-btn" onclick="traducir('de', 'es')" style="background: #0284c7;">🇩🇪 ➔ 🇪🇸 Traducir</button>
+                    <button class="action-btn" onclick="traducir('es', 'de')" style="background: #0284c7;">🇪🇸 ➔ 🇩🇪 Traducir</button>
+                    <button class="action-btn" onclick="corregirOrtografia()" style="background: #10b981;">✓ Corregir Alemán</button>
+                </div>
+                <div id="traductor-resultado" class="result-box">Aquí aparecerá la traducción o las correcciones...</div>
+            </div>
+            <p style="font-size: 0.9rem; color: #64748b;"><em>💡 Al traducir, el resultado se copia directamente a la pestaña "Mi Diccionario" para que lo guardes con 1 clic.</em></p>
+        </div>
+
+        <div id="redemittel" class="tab-content card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; margin-bottom: 15px; padding-bottom: 10px;">
+                <h2 style="border: none; margin: 0; padding: 0;">🧱 Mi Diccionario (Redemittel)</h2>
+                <button class="action-btn" onclick="toggleFlashcards()" style="background: #10b981;">🙈 Activar Flashcards</button>
+            </div>
+            <div class="input-group">
+                <input type="text" id="frase-de" placeholder="🇩🇪 Escribe en alemán...">
+                <input type="text" id="frase-es" placeholder="🇪🇸 Traducción">
+                <button class="action-btn" onclick="addItem('frases')">Guardar</button>
+            </div>
+            <ul id="lista-frases" class="dynamic-list"></ul>
+        </div>
+
+        <div id="material" class="tab-content card">
+            <h2>🎧 Podcasts y Audios</h2>
+            <div class="input-group">
+                <input type="text" id="podcast-nombre" placeholder="Nombre del episodio...">
+                <button class="action-btn" onclick="addItem('podcasts')">Añadir</button>
+            </div>
+            <ul id="lista-podcasts" class="dynamic-list"></ul>
+
+            <h2 style="margin-top: 2rem;">📖 Artículos y Textos</h2>
+            <div class="input-group">
+                <input type="text" id="articulo-nombre" placeholder="Título del artículo...">
+                <button class="action-btn" onclick="addItem('articulos')">Añadir</button>
+            </div>
+            <ul id="lista-articulos" class="dynamic-list"></ul>
+        </div>
+
+        <div id="progreso" class="tab-content card">
+            <h2>📈 Notas de Simulacros (Goethe)</h2>
+            <div class="input-group">
+                <select id="nota-modulo">
+                    <option value="Lesen">Lesen</option>
+                    <option value="Hören">Hören</option>
+                    <option value="Schreiben">Schreiben</option>
+                    <option value="Sprechen">Sprechen</option>
+                </select>
+                <input type="text" id="nota-puntuacion" placeholder="Puntuación (Ej: 22/30)">
+                <input type="date" id="nota-fecha">
+                <button class="action-btn" onclick="addItem('notas')">Registrar</button>
+            </div>
+            <ul id="lista-notas" class="dynamic-list"></ul>
+
+            <h2 style="margin-top: 2rem;">🧩 Gramática Dominada</h2>
+            <div class="input-group">
+                <input type="text" id="gramatica-tema" placeholder="Estructura (Ej: Konjunktiv II)...">
+                <button class="action-btn" onclick="addItem('gramatica')">Añadir</button>
+            </div>
+            <ul id="lista-gramatica" class="dynamic-list"></ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // --- NAVEGACIÓN ---
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) { tabcontent[i].classList.remove("active"); }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // --- CUENTA ATRÁS: 20 DE MAYO ---
+        function updateCountdown() {
+            const examDate = new Date('2026-05-20T00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = examDate - now;
+            if (distance < 0) { document.getElementById("countdown-timer").innerHTML = "¡HOY ES EL EXAMEN! Viel Erfolg!"; return; }
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById("countdown-timer").innerHTML = `⏳ Faltan ${days} días`;
+        }
+        setInterval(updateCountdown, 1000);
+
+        // --- TRADUCTOR GOOGLE Y CORRECTOR ---
+        async function traducir(sourceLang, targetLang) {
+            let input = document.getElementById('traductor-input').value;
+            if(!input) return;
+            document.getElementById('traductor-resultado').innerHTML = "⏳ Traduciendo...";
+            try {
+                // Truco: Usar el endpoint público de Google Translate para mayor precisión
+                let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(input)}`;
+                let res = await fetch(url);
+                let data = await res.json();
+                let traduccion = data[0].map(item => item[0]).join('');
+                document.getElementById('traductor-resultado').innerHTML = `<strong>Traducción:</strong> ${traduccion}`;
+                
+                // Autorellenar la pestaña de diccionario
+                if(sourceLang === 'de') {
+                    document.getElementById('frase-de').value = input;
+                    document.getElementById('frase-es').value = traduccion;
+                } else {
+                    document.getElementById('frase-es').value = input;
+                    document.getElementById('frase-de').value = traduccion;
+                }
+            } catch(e) {
+                document.getElementById('traductor-resultado').innerHTML = "❌ Error de conexión al traducir.";
+            }
+        }
+
+        async function corregirOrtografia() {
+            let input = document.getElementById('traductor-input').value;
+            if(!input) return;
+            document.getElementById('traductor-resultado').innerHTML = "⏳ Analizando gramática...";
+            try {
+                let params = new URLSearchParams();
+                params.append('text', input);
+                params.append('language', 'de-DE');
+                let res = await fetch('https://api.languagetoolplus.com/v2/check', { method: 'POST', body: params });
+                let data = await res.json();
+                
+                if(data.matches && data.matches.length > 0) {
+                    let notas = "<strong style='color:#ef4444;'>⚠️ Posibles errores encontrados:</strong><br><br>";
+                    data.matches.forEach(m => {
+                        if(m.replacements.length > 0) {
+                            let mala = input.substring(m.offset, m.offset + m.length);
+                            notas += `• Escribiste "<em>${mala}</em>" ➔ Sugerencia: <strong>${m.replacements[0].value}</strong> <br><span style="font-size:0.85rem; color:#64748b;">(Detalle: ${m.message})</span><br><br>`;
+                        }
+                    });
+                    document.getElementById('traductor-resultado').innerHTML = notas;
+                } else {
+                    document.getElementById('traductor-resultado').innerHTML = "✅ ¡Gramática y ortografía perfectas!";
+                }
+            } catch(e) {
+                document.getElementById('traductor-resultado').innerHTML = "❌ Error al conectar con el corrector.";
+            }
+        }
+
+        // --- FLASHCARDS Y TTS ---
+        function toggleFlashcards() { document.getElementById('lista-frases').classList.toggle('flashcard-mode'); }
+        function leerEnAleman(texto) {
+            window.speechSynthesis.cancel();
+            let mensaje = new SpeechSynthesisUtterance(texto);
+            mensaje.lang = 'de-DE'; mensaje.rate = 0.9;
+            window.speechSynthesis.speak(mensaje);
+        }
+
+        // --- BASE DE DATOS SUPABASE ---
+        const supabaseUrl = 'https://wczkybpieqdwnuvgosfq.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indjemt5YnBpZXFkd251dmdvc2ZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NjA1NjksImV4cCI6MjA4ODEzNjU2OX0.4A-ilrku2_HyyS32sjP3djNxk3wmv-ymUx0ULZpvz-4';
+        const db = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function initApp() { updateCountdown(); renderAll(); }
+
+        // Función ADD arreglada para soportar TODAS las categorías sin bloquearse
+        async function addItem(categoria) {
+            let texto = "";
+            
+            if (categoria === 'frases') {
+                let de = document.getElementById('frase-de').value;
+                let es = document.getElementById('frase-es').value;
+                if(!de) { alert("¡Escribe la frase en alemán!"); return; }
+                texto = `<strong class="de-text" style="font-size:1.1rem; color:var(--primary);">${de}</strong> <br> <span class="es-translation"><em>${es}</em></span>`;
+                document.getElementById('frase-de').value = ''; 
+                document.getElementById('frase-es').value = '';
+                
+            } else if (categoria === 'podcasts') {
+                texto = document.getElementById('podcast-nombre').value;
+                if(!texto) return;
+                document.getElementById('podcast-nombre').value = '';
+                
+            } else if (categoria === 'articulos') {
+                texto = document.getElementById('articulo-nombre').value;
+                if(!texto) return;
+                document.getElementById('articulo-nombre').value = '';
+                
+            } else if (categoria === 'notas') {
+                let mod = document.getElementById('nota-modulo').value; 
+                let punt = document.getElementById('nota-puntuacion').value; 
+                let fec = document.getElementById('nota-fecha').value;
+                if(!punt) return;
+                texto = `<strong>${mod}</strong>: <span style="color:var(--accent); font-weight:bold;">${punt}</span> (${fec})`;
+                document.getElementById('nota-puntuacion').value = '';
+                
+            } else if (categoria === 'gramatica') {
+                texto = document.getElementById('gramatica-tema').value;
+                if(!texto) return;
+                document.getElementById('gramatica-tema').value = '';
+            }
+
+            if(!texto) return;
+
+            // Enviar a Supabase
+            const { error } = await db.from('b2_tracker').insert([{ categoria: categoria, contenido: texto }]);
+            if (error) {
+                alert("Hubo un error al guardar en la base de datos.");
+                console.error("Error:", error);
+            } else {
+                renderAll(); // Refrescar listas
+            }
+        }
+
+        async function deleteItem(id) {
+            const { error } = await db.from('b2_tracker').delete().eq('id', id);
+            if (error) console.error("Error:", error); else renderAll();
+        }
+
+        // Función RENDER arreglada para soportar todas las listas del HTML
+        async function renderAll() {
+            const { data, error } = await db.from('b2_tracker').select('*').order('created_at', { ascending: true });
+            if (error) return;
+
+            // Limpiar todas las listas antes de recargar
+            const categorias = ['frases', 'podcasts', 'articulos', 'notas', 'gramatica'];
+            categorias.forEach(cat => {
+                let ul = document.getElementById(`lista-${cat}`);
+                if(ul) ul.innerHTML = '';
+            });
+
+            // Llenar listas con datos de Supabase
+            data.forEach(item => {
+                let li = document.createElement('li');
+                
+                if (item.categoria === 'frases') {
+                    // Extraer alemán para el botón de voz
+                    let tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = item.contenido;
+                    let deElement = tempDiv.querySelector('.de-text') || tempDiv.querySelector('strong');
+                    let textoAleman = deElement ? deElement.innerText : "Fehler";
+                    
+                    li.innerHTML = `
+                        <div class="item-content">
+                            <button class="btn-speak" onclick="leerEnAleman('${textoAleman.replace(/'/g, "\\'")}')" title="Escuchar">🔊</button>
+                            <div style="flex:1;">${item.contenido}</div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteItem(${item.id})">X</button>
+                    `;
+                } else {
+                    li.innerHTML = `<div style="flex:1;">${item.contenido}</div> <button class="delete-btn" onclick="deleteItem(${item.id})">X</button>`;
+                }
+                
+                let targetList = document.getElementById(`lista-${item.categoria}`);
+                if(targetList) targetList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operación B2 - Goethe Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; line-height: 1.6; }
+        
         /* Cabecera */
         header { background: linear-gradient(135deg, #0f172a, var(--primary)); color: white; padding: 2rem 1rem; text-align: center; }
         h1 { margin: 0; font-size: 2.5rem; letter-spacing: -1px; }
